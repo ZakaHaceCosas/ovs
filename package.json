@@ -1,16 +1,16 @@
 {
-  "name": "ovs3",
-  "version": "3.0.0",
-  "description": "Storage managment made easy.",
-  "main": "main.js",
-  "scripts": {
-    "start": "tsc && electron ."
-  },
-  "author": "ZakaHaceCosas",
-  "license": "Apache-2.0",
-  "devDependencies": {
-    "@types/electron": "^1.6.10",
-    "electron": "^30.0.8",
-    "typescript": "^5.4.5"
-  }
+    "name": "ovs",
+    "version": "3.0.0",
+    "description": "Storage managment made easy.",
+    "main": "main.js",
+    "scripts": {
+        "start": "tsc && electron ."
+    },
+    "author": "ZakaHaceCosas",
+    "license": "Apache-2.0",
+    "devDependencies": {
+        "@types/electron": "^1.6.10",
+        "electron": "^30.0.8",
+        "typescript": "^5.4.5"
+    }
 }
