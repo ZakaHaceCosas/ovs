@@ -1,0 +1,20 @@
+{
+    "files.exclude": {
+        "**/node_modules": true,
+        "*.js": true,
+        "bs.min.css": true
+    },
+    "editor.fontSize": 12,
+    "editor.wordWrap": "off",
+    "editor.smoothScrolling": true,
+    "editor.cursorSmoothCaretAnimation": "on",
+    "workbench.list.smoothScrolling": true,
+    "terminal.integrated.smoothScrolling": true,
+    "editor.cursorBlinking": "expand",
+    "redhat.telemetry.enabled": false,
+    "files.autoSave": "afterDelay",
+    "files.autoSaveDelay": 5000,
+    "editor.fontFamily": "'Roboto Mono', Consolas, 'Courier New', monospace",
+    "editor.fontWeight": 450,
+    "editor.fontLigatures": true,
+}
