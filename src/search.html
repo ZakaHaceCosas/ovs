@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html data-bs-theme="light">
+    <head>
+        <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+        <meta
+            http-equiv="Content-Security-Policy"
+            content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:;"
+        />
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+        <link rel="icon" href="../public/fav.png" type="image/png" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>OVS 3 - Home</title>
+        <link rel="stylesheet" href="css/bs.min.css" />
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg">
+            <div class="container-fluid">
+                <a class="navbar-brand" id="appname">OVS 3</a>
+                <button
+                    class="navbar-toggler"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarNav"
+                    aria-controls="navbarNav"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation"
+                >
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a
+                                class="nav-link active"
+                                aria-current="page"
+                                href="index.html"
+                                >Home</a
+                            >
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="prefs.html">Settings</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="guide.html">Guide</a>
+                        </li>
+                    </ul>
+                    <a href="index.html">
+                        <button class="btn btn-primary" type="button">
+                            Go back
+                        </button>
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container mt-5 mb-4">
+            <h1>Search</h1>
+            <p>Look for a specific SET or ITEM.</p>
+            <input
+                class="form-control me-2"
+                type="search"
+                id="searchInput"
+                name="query"
+                placeholder="Search by name..."
+                aria-label="Search"
+                pattern="^\S.*$"
+            />
+            <hr />
+            <ul
+                id="searchResults"
+                class="list-group d-flex justify-content-between align-items-start"
+                style="width: 100%"
+            ></ul>
+            <script>
+                let jsonData;
+                try {
+                    jsonData = JSON.parse(window.electron.requestDataJson());
+                    if (typeof jsonData !== "object" || jsonData === null) {
+                        throw new Error("Invalid JSON data");
+                    }
+                } catch (error) {
+                    console.error("Failed to parse JSON:", error);
+                    jsonData = { inventory: [] };
+                }
+
+                const searchInput = document.getElementById("searchInput");
+                const searchResults = document.getElementById("searchResults");
+
+                if (searchInput && searchResults) {
+                    // just in case.
+                    function escapeHTML(str) {
+                        return str.replace(/[&<>"']/g, function (match) {
+                            const escapeMap = {
+                                "&": "&amp;",
+                                "<": "&lt;",
+                                ">": "&gt;",
+                                '"': "&quot;",
+                                "'": "&#39;",
+                            };
+                            return escapeMap[match];
+                        });
+                    }
+
+                    function search(query) {
+                        searchResults.innerHTML = "";
+
+                        if (!query) {
+                            return;
+                        }
+
+                        let itemFound = false;
+                        let setFound = false;
+
+                        const itemResults = document.createElement("div");
+                        const setResults = document.createElement("div");
+                        itemResults.className = "w-100 p-0";
+                        setResults.className = "w-100 p-0";
+
+                        itemResults.innerHTML = "<h2>Items</h2>";
+                        setResults.innerHTML = "<h2>Sets</h2>";
+
+                        const itemList = document.createElement("ul");
+                        const setList = document.createElement("ul");
+                        itemList.className = "w-100 p-0";
+                        setList.className = "w-100 p-0";
+
+                        jsonData.inventory.forEach((set) => {
+                            const setName = set.set_name;
+                            const setMatch = setName
+                                .toLowerCase()
+                                .includes(query.toLowerCase());
+
+                            const matchingItems = set.items.filter((item) =>
+                                item.item_name
+                                    .toLowerCase()
+                                    .includes(query.toLowerCase())
+                            );
+
+                            if (matchingItems.length > 0) {
+                                itemFound = true;
+                                matchingItems.forEach((item) => {
+                                    const li = document.createElement("li");
+                                    li.className =
+                                        "list-group-item d-flex justify-content-between align-items-start flex-column w-100 p-3";
+                                    const itemUl = document.createElement("ul");
+                                    itemUl.className =
+                                        "list-group-item list-group-flush w-100";
+                                    itemUl.innerHTML = `
+                        ID: <code>${escapeHTML(item.item_id)}</code><br>
+                        Name: <b>${escapeHTML(item.item_name)}</b><br>
+                        Stock: <b>${escapeHTML(item.stock.toString())}</b><br>
+                        Description: <b>${escapeHTML(item.description)}</b>`;
+                                    li.appendChild(itemUl);
+                                    itemList.appendChild(li);
+                                });
+                            }
+
+                            if (setMatch) {
+                                setFound = true;
+                                const li = document.createElement("li");
+                                li.className =
+                                    "list-group-item d-flex justify-content-between align-items-start flex-column w-100 p-3";
+                                const div = document.createElement("div");
+                                div.className = "ms-2 me-auto";
+                                const h4 = document.createElement("h4");
+                                h4.textContent = escapeHTML(setName);
+                                const itemUl = document.createElement("ul");
+                                itemUl.className =
+                                    "list-group-item list-group-flush w-100";
+                                set.items.forEach((item) => {
+                                    const itemLi = document.createElement("li");
+                                    itemLi.className =
+                                        "list-group-item list-group-flush w-100";
+                                    itemLi.innerHTML = `ID: <code>${escapeHTML(
+                                        item.item_id
+                                    )}</code><br>Name: <b>${escapeHTML(
+                                        item.item_name
+                                    )}</b><br>Stock: <b>${escapeHTML(
+                                        item.stock.toString()
+                                    )}</b>`;
+                                    itemUl.appendChild(itemLi);
+                                });
+                                li.appendChild(div);
+                                li.appendChild(h4);
+                                li.appendChild(itemUl);
+                                setList.appendChild(li);
+                            }
+                        });
+
+                        if (itemFound) {
+                            itemResults.appendChild(itemList);
+                            searchResults.appendChild(itemResults);
+                        }
+
+                        if (setFound) {
+                            setResults.appendChild(setList);
+                            searchResults.appendChild(setResults);
+                        }
+
+                        if (!itemFound && !setFound) {
+                            const notfound = document.createElement("h1");
+                            notfound.innerText = "No results!";
+                            searchResults.appendChild(notfound);
+                        }
+                    }
+
+                    searchInput.addEventListener("input", () => {
+                        search(searchInput.value);
+                    });
+                } else {
+                    console.error("Missing search input or results element.");
+                }
+            </script>
+        </div>
+    </body>
+</html>

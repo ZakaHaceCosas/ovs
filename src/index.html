@@ -1,71 +1,84 @@
 <!DOCTYPE html>
 <html data-bs-theme="light">
+    <head>
+        <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+        <meta
+            http-equiv="Content-Security-Policy"
+            content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:;"
+        />
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+        <link rel="icon" href="../public/fav.png" type="image/png" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>OVS 3 - Home</title>
+        <link rel="stylesheet" href="css/bs.min.css" />
+    </head>
 
-<head>
-    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-    <link rel="icon" href="../public/fav.png" type="image/png">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OVS 3 - Home</title>
-    <link rel="stylesheet" href="css/bs.min.css">
-</head>
+    <body>
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                const jsonData = JSON.parse(window.electron.requestPrefsJson());
+                console.log(JSON.stringify(jsonData));
+            });
+            document.addEventListener("DOMContentLoaded", () => {
+                try {
+                    const jsondData = JSON.parse(
+                        window.electron.requestDataJson()
+                    );
+                    console.log("Datos JSON:", jsondData);
 
-<body>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const jsonData = JSON.parse(window.electron.requestPrefsJson());
-            console.log(JSON.stringify(jsonData));
-        });
-        document.addEventListener('DOMContentLoaded', () => {
-            try {
-                const jsondData = JSON.parse(window.electron.requestDataJson());
-                console.log('Datos JSON:', jsondData);
+                    function displayInventory(inventory) {
+                        const inventoryContainer =
+                            document.getElementById("inventory");
+                        const alertsContainer =
+                            document.getElementById("alerts");
+                        inventoryContainer.innerHTML = "";
+                        alertsContainer.innerHTML = "";
 
-                function displayInventory(inventory) {
-                    const inventoryContainer = document.getElementById('inventory');
-                    const alertsContainer = document.getElementById('alerts');
-                    inventoryContainer.innerHTML = '';
-                    alertsContainer.innerHTML = '';
-
-                    if (!inventory || inventory.length === 0) {
-                        inventoryContainer.innerHTML = '<h1>No items!</h1>';
-                        return;
-                    }
-
-                    inventory.forEach(set => {
-                        const setElement = document.createElement('a');
-                        setElement.href = "#";
-                        setElement.className = "list-group-item list-group-item-action p-3";
-                        setElement.setAttribute("aria-current", "true");
-
-                        const totalItems = set.items.reduce((sum, item) => sum + item.stock, 0);
-                        let totalColor = "primary";
-                        if (totalItems < 5) {
-                            totalColor = "danger";
-                        } else if (totalItems < 21) {
-                            totalColor = "warning";
+                        if (!inventory || inventory.length === 0) {
+                            inventoryContainer.innerHTML = "<h1>No items!</h1>";
+                            return;
                         }
 
-                        setElement.innerHTML = `
+                        inventory.forEach((set) => {
+                            const setElement = document.createElement("a");
+                            setElement.href = "#";
+                            setElement.className =
+                                "list-group-item list-group-item-action p-3";
+                            setElement.setAttribute("aria-current", "true");
+
+                            const totalItems = set.items.reduce(
+                                (sum, item) => sum + item.stock,
+                                0
+                            );
+                            let totalColor = "primary";
+                            if (totalItems < 5) {
+                                totalColor = "danger";
+                            } else if (totalItems < 21) {
+                                totalColor = "warning";
+                            }
+
+                            setElement.innerHTML = `
                             <div class="d-flex w-100 justify-content-between">
                                 <h3 class="fw-bold mb-1">${set.set_name}</h3>
                                 <small>TOTAL: <span class="badge text-bg-${totalColor}">${totalItems}</span></small>
                             </div>
                             <ul class="list-group list-group-flush mb-2 mt-2">
-                                ${set.items.map(item => {
-                            let itemColor = "success";
-                            if (item.stock < 5) {
-                                itemColor = "danger";
-                                alertsContainer.innerHTML += `<div class="alert alert-danger" role="alert">
+                                ${set.items
+                                    .map((item) => {
+                                        let itemColor = "success";
+                                        if (item.stock < 5) {
+                                            itemColor = "danger";
+                                            alertsContainer.innerHTML += `<div class="alert alert-danger" role="alert">
                                             Item <strong>${item.item_name}</strong> (ID: ${item.item_id}) is critically low on stock!
                                         </div>`;
-                            } else if (item.stock < 21) {
-                                itemColor = "warning";
-                                alertsContainer.innerHTML += `<div class="alert alert-warning" role="alert">
+                                        } else if (item.stock < 21) {
+                                            itemColor = "warning";
+                                            alertsContainer.innerHTML += `<div class="alert alert-warning" role="alert">
                                             Item <strong>${item.item_name}</strong> (ID: ${item.item_id}) is low on stock!
                                         </div>`;
-                            }
-                            return `
+                                        }
+                                        return `
                                         <li class="list-group-item d-flex justify-content-between align-items-start">
                                             <div class="ms-2 me-auto">
                                                 <h4>${item.item_name}</h4>
@@ -75,99 +88,135 @@
                                             <span class="badge text-bg-${itemColor}">${item.stock}</span>
                                         </li>
                                     `;
-                        }).join('')}
+                                    })
+                                    .join("")}
                             </ul>
                             <small>SET ID: <code>${set.set_id}</code>.</small>
                         `;
 
-                        inventoryContainer.appendChild(setElement);
-                    });
-                }
+                            inventoryContainer.appendChild(setElement);
+                        });
+                    }
 
-                if (!jsondData.inventory || !Array.isArray(jsondData.inventory) || jsondData.inventory.length === 0) {
-                    document.getElementById('inventory').innerHTML = '<h1>No items!</h1>';
-                } else {
-                    displayInventory(jsondData.inventory);
+                    if (
+                        !jsondData.inventory ||
+                        !Array.isArray(jsondData.inventory) ||
+                        jsondData.inventory.length === 0
+                    ) {
+                        document.getElementById("inventory").innerHTML =
+                            "<h1>No items!</h1>";
+                    } else {
+                        displayInventory(jsondData.inventory);
+                    }
+                } catch (error) {
+                    console.error("Error al procesar los datos JSON:", error);
+                    document.getElementById("inventory").innerHTML =
+                        "<h1>No items!</h1>";
                 }
-            } catch (error) {
-                console.error('Error al procesar los datos JSON:', error);
-                document.getElementById('inventory').innerHTML = '<h1>No items!</h1>';
-            }
-        });
-    </script>
-    <nav class="navbar navbar-expand-lg">
-        <div class="container-fluid">
-            <a class="navbar-brand" id="appname">OVS 3</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="index.html">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="prefs.html">Settings</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="guide.html">Guide</a>
-                    </li>
-                </ul>
-                <form class="d-flex" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-primary" type="submit">Search</button>
-                </form>
-            </div>
-        </div>
-    </nav>
-    <div class="container mt-5 mb-4">
-        <h1>Home</h1>
-        <p>Welcome, dear user!</p>
-        <div id="alerts"></div>
-        <div class="d-flex flex-row">
-            <div class="btn-group dropend" role="group" style="height: 40px; width: 150px;">
-                <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="false">
-                    Update data
+            });
+        </script>
+        <nav class="navbar navbar-expand-lg">
+            <div class="container-fluid">
+                <a class="navbar-brand" id="appname">OVS 3</a>
+                <button
+                    class="navbar-toggler"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarNav"
+                    aria-controls="navbarNav"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation"
+                >
+                    <span class="navbar-toggler-icon"></span>
                 </button>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">Update stock</a></li>
-                    <hr />
-                    <li><a class="dropdown-item" href="#">Create SET</a></li>
-                    <li><a class="dropdown-item" href="#">Create ITEM</a></li>
-                    <hr />
-                    <li><a class="dropdown-item" href="#">Delete SET</a></li>
-                    <li><a class="dropdown-item" href="#">Delete ITEM</a></li>
-                </ul>
-            </div>
-
-            <div style="width: 20px;"></div>
-            <div class="flex-grow-1 list-group" id="inventory">
-                <!--
-                <a href="#" class="list-group-item list-group-item-action p-3" aria-current="true">
-                    <div class="d-flex w-100 justify-content-between">
-                        <h3 class="fw-bold mb-1">SET NAME</h3>
-                        <small>TOTAL: <span class="badge text-bg-primary">32</span></small>
-                    </div>
-                    <ul class="list-group list-group-flush mb-2 mt-2">
-                        <li class="list-group-item d-flex justify-content-between align-items-start">
-                            <div class="ms-2 me-auto">
-                                <h4>ITEM NAME</h4>
-                                <p class="text-body-secondary m-0 p-0">ITEM DESC</p>
-                                <code>ITEM_ID</code>
-                            </div>
-                            <span class="badge text-bg-warning">14</span>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a
+                                class="nav-link active"
+                                aria-current="page"
+                                href="index.html"
+                                >Home</a
+                            >
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="prefs.html">Settings</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="guide.html">Guide</a>
                         </li>
                     </ul>
-                    <small>SET ID: <code>SET_ID_HERE</code>.</small>
-                </a>
-                -->
+                    <a href="search.html">
+                        <button class="btn btn-primary" type="button">
+                            Search
+                        </button>
+                    </a>
+                </div>
+            </div>
+        </nav>
+        <div class="container mt-5 mb-4">
+            <h1>Home</h1>
+            <p>Welcome, dear user!</p>
+            <div id="alerts"></div>
+            <div class="d-flex flex-row">
+                <div
+                    class="btn-group dropend"
+                    role="group"
+                    style="height: 40px; width: 150px"
+                >
+                    <button
+                        type="button"
+                        class="btn btn-primary"
+                        data-bs-toggle="modal"
+                        data-bs-target="#updateDataModal"
+                    >
+                        Update data
+                    </button>
+                </div>
+
+                <div style="width: 20px"></div>
+                <div class="flex-grow-1 list-group" id="inventory"></div>
+            </div>
+            <script src="js/bs.min.js"></script>
+            <script src="js/popper.js"></script>
+        </div>
+
+        <!-- modal -->
+        <div
+            class="modal fade"
+            id="updateDataModal"
+            tabindex="-1"
+            aria-labelledby="updateDataModal"
+            aria-hidden="true"
+        >
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">
+                            Modal title
+                        </h1>
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"
+                        ></button>
+                    </div>
+                    <div class="modal-body">...</div>
+                    <div class="modal-footer">
+                        <button
+                            type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal"
+                        >
+                            Close
+                        </button>
+                        <button type="button" class="btn btn-primary">
+                            Save changes
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
-        <script src="js/bs.min.js"></script>
-        <script src="js/popper.js"></script>
-    </div>
-</body>
-
+    </body>
 </html>

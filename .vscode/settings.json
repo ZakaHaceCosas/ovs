@@ -1,6 +1,7 @@
 {
     "files.exclude": {
         "**/node_modules": true,
+        "*.min.js": true,
         "*.js": true,
         "bs.min.css": true
     },
@@ -20,5 +21,8 @@
     "editor.formatOnSave": true,
     "prettier.tabWidth": 4,
     "editor.indentSize": "tabSize",
-    "editor.tabSize": 4
+    "editor.tabSize": 4,
+    "[*.min.css]": {
+        "editor.formatOnSave": false
+    }
 }

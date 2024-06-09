@@ -1,7 +1,10 @@
 {
-    "name": "ovs",
+    "name": "ovs3",
     "version": "3.0.0",
     "description": "Storage managment made easy.",
+    "repository": "https://github.com/ZakaHaceCosas/ovs",
+    "readme": "https://github.com/ZakaHaceCosas/ovs#readme",
+    "private": false,
     "main": "main.js",
     "scripts": {
         "start": "tsc && electron ."
