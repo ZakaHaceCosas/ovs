@@ -167,11 +167,32 @@
                     <button
                         type="button"
                         class="btn btn-primary"
-                        data-bs-toggle="modal"
-                        data-bs-target="#updateDataModal"
+                        data-bs-toggle="dropdown"
                     >
-                        Update data
+                        Create
                     </button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a
+                                class="dropdown-item"
+                                href="#"
+                                data-bs-toggle="modal"
+                                data-bs-target="#createSetModal"
+                            >
+                                Create SET
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                class="dropdown-item"
+                                href="#"
+                                data-bs-toggle="modal"
+                                data-bs-target="#createItemModal"
+                            >
+                                Create ITEM
+                            </a>
+                        </li>
+                    </ul>
                 </div>
 
                 <div style="width: 20px"></div>
@@ -184,15 +205,15 @@
         <!-- modal -->
         <div
             class="modal fade"
-            id="updateDataModal"
+            id="createSetModal"
             tabindex="-1"
-            aria-labelledby="updateDataModal"
+            aria-labelledby="createSetModalLabel"
             aria-hidden="true"
         >
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">
+                        <h1 class="modal-title fs-5" id="createSetModalLabel">
                             Modal title
                         </h1>
                         <button
