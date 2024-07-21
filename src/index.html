@@ -115,6 +115,39 @@
                 }
             });
         </script>
+
+        <script src="ts/contxt.js"></script>
+        <style>
+            #context-menu {
+                display: none;
+                position: absolute;
+                background-color: white;
+                border: 1px solid #ccc;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+                z-index: 1000;
+            }
+            #context-menu ul {
+                list-style-type: none;
+                padding: 10px 0;
+                margin: 0;
+            }
+            #context-menu li {
+                padding: 8px 12px;
+                cursor: pointer;
+            }
+            #context-menu li:hover {
+                background-color: #eee;
+            }
+        </style>
+
+        <div id="content"></div>
+        <div id="context-menu">
+            <ul>
+                <li onclick="editItem()">Edit</li>
+                <li onclick="deleteItem()">Delete</li>
+            </ul>
+        </div>
+
         <nav class="navbar navbar-expand-lg">
             <div class="container-fluid">
                 <a class="navbar-brand" id="appname">OVS 3</a>
@@ -214,7 +247,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="createSetModalLabel">
-                            Modal title
+                            Create a SET
                         </h1>
                         <button
                             type="button"
@@ -230,10 +263,10 @@
                             class="btn btn-secondary"
                             data-bs-dismiss="modal"
                         >
-                            Close
+                            Nevermind
                         </button>
                         <button type="button" class="btn btn-primary">
-                            Save changes
+                            Create
                         </button>
                     </div>
                 </div>
