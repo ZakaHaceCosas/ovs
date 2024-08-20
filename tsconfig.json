@@ -14,7 +14,6 @@
         "diagnostics": true,
         "exactOptionalPropertyTypes": true,
         "strictBindCallApply": true,
-        "strictBuiltinIteratorReturn": true,
         "strictFunctionTypes": true,
         "strictNullChecks": true,
         "strictPropertyInitialization": true
