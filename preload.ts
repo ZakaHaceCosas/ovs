@@ -3,6 +3,7 @@ const { contextBridge, ipcRenderer } = require('electron');
 contextBridge.exposeInMainWorld('electron', {
     requestPrefsJson: () => ipcRenderer.sendSync('requestPrefsJson'),
     requestDataJson: () => ipcRenderer.sendSync('requestDataJson'),
+    wipeOvs: () => ipcRenderer.sendSync('wipeOvs')
 });
 
 window.addEventListener('DOMContentLoaded', () => {

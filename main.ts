@@ -77,16 +77,36 @@ Electron.app.on('ready', () => {
 });
 
 Electron.ipcMain.on('requestPrefsJson', (event) => {
-    const prefsPath = path.join(Electron.app.getPath('userData'), 'prefs.json');
-    const jsonData = fs.readFileSync(prefsPath, 'utf8');
-    event.returnValue = jsonData;
+    try {
+        const prefsPath = path.join(Electron.app.getPath('userData'), 'prefs.json');
+        const jsonData = fs.readFileSync(prefsPath, 'utf8');
+        event.returnValue = jsonData;
+    } catch (e) {
+        throw e
+    }
 });
 
 Electron.ipcMain.on('requestDataJson', (event) => {
-    const dataPath = path.join(Electron.app.getPath('userData'), 'data.json');
-    const jsondData = fs.readFileSync(dataPath, 'utf8');
-    event.returnValue = jsondData;
+    try {
+        const dataPath = path.join(Electron.app.getPath('userData'), 'data.json');
+        const jsondData = fs.readFileSync(dataPath, 'utf8');
+        event.returnValue = jsondData;
+    } catch (e) {
+        throw e
+    }
 });
+
+Electron.ipcMain.on('wipeOvs', (event) => {
+    try {
+        const prefsPath = path.join(Electron.app.getPath('userData'), 'prefs.json');
+        fs.writeFileSync(prefsPath, '{"theme":"dark","lang":"english","appname":"OVS 3","startup":false,"encrypt":false}', 'utf-8')
+        const dataPath = path.join(Electron.app.getPath('userData'), 'data.json');
+        fs.writeFileSync(dataPath, '{}', 'utf-8')
+        event.returnValue = 0
+    } catch (e) {
+        throw e
+    }
+})
 
 Electron.app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
