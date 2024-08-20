@@ -59,3 +59,10 @@ temp/
 
 # Electron
 electron-builder.yaml
+
+# JavaScript
+*.js
+**/*.js
+
+# Allow non-TS JS
+!src/js/*.js

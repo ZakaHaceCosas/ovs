@@ -1,4 +1,4 @@
-function toggleContextMenu(x: number, y: number) {
+/* function toggleContextMenu(x: number, y: number) {
     const menu = document.getElementById("context-menu");
     if (menu) {
         menu.style.display = (menu.style.display === "block") ? "none" : "block";
@@ -23,3 +23,4 @@ if (document.addEventListener) {
         return false;
     });
 }
+ */
