@@ -2,6 +2,21 @@
     "compilerOptions": {
         "target": "ESNext",
         "module": "commonjs",
-        "strict": true
+        "strict": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noImplicitAny": true,
+        "noImplicitOverride": true,
+        "noImplicitReturns": true,
+        "forceConsistentCasingInFileNames": true,
+        "incremental": true,
+        "alwaysStrict": true,
+        "diagnostics": true,
+        "exactOptionalPropertyTypes": true,
+        "strictBindCallApply": true,
+        "strictBuiltinIteratorReturn": true,
+        "strictFunctionTypes": true,
+        "strictNullChecks": true,
+        "strictPropertyInitialization": true
     }
 }
