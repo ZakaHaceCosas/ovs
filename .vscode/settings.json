@@ -19,5 +19,6 @@
     "editor.tabSize": 4,
     "[*.min.css]": {
         "editor.formatOnSave": false
-    }
+    },
+    "typescript.tsdk": "node_modules\\typescript\\lib"
 }
