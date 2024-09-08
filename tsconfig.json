@@ -1,7 +1,8 @@
 {
     "compilerOptions": {
         "target": "ES6",
-        "module": "commonjs",
+        "module": "ES6",
+        "lib": ["ES6", "DOM"],
         "strict": true,
         "noUnusedLocals": true,
         "noUnusedParameters": true,
@@ -16,6 +17,8 @@
         "strictBindCallApply": true,
         "strictFunctionTypes": true,
         "strictNullChecks": true,
-        "strictPropertyInitialization": true
+        "strictPropertyInitialization": true,
+        "esModuleInterop": true,
+        "moduleResolution": "node"
     }
 }
