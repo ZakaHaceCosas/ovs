@@ -1,8 +1,17 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
+interface OvsSettingsArgs {
+    lang?: string;
+    appname?: string;
+    theme?: string;
+    startup?: false;
+    encrypt?: false;
+}
+
 contextBridge.exposeInMainWorld('electron', {
     requestPrefsJson: () => ipcRenderer.sendSync('requestPrefsJson'),
     requestDataJson: () => ipcRenderer.sendSync('requestDataJson'),
+    changeOvsSettings: (args: OvsSettingsArgs) => ipcRenderer.sendSync('changeOvsSettings', args),
     wipeOvs: () => ipcRenderer.sendSync('wipeOvs')
 });
 

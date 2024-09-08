@@ -17,8 +17,9 @@ function createWindow(): void {
         transparent: false,
         icon: path.join(__dirname, 'public/fav.png'),
         webPreferences: {
+            preload: path.join(__dirname, 'preload.js'),
             contextIsolation: true,
-            preload: path.join(__dirname, 'preload.js')
+            nodeIntegration: false,
         }
     });
 
@@ -26,6 +27,22 @@ function createWindow(): void {
     win.on('closed', () => {
         win = null;
     });
+}
+
+interface Preferences {
+    theme: "dark" | "light",
+    lang: "english" | "spanish",
+    appname: string,
+    startup: false,
+    encrypt: false, // no boolean as we dont support this yet
+}
+
+const defaultPrefs: Preferences = {
+    theme: "dark",
+    lang: "english",
+    appname: "OVS 3",
+    startup: false,
+    encrypt: false
 }
 
 Electron.app.on('ready', () => {
@@ -41,7 +58,7 @@ Electron.app.on('ready', () => {
 
     fs.access(prefsPath, fs.constants.F_OK, (err: NodeJS.ErrnoException | null) => {
         if (err) {
-            fs.writeFile(prefsPath, '{"theme":"dark","lang":"english","appname":"OVS 3","startup":false,"encrypt":false}', (err: NodeJS.ErrnoException | null) => {
+            fs.writeFile(prefsPath, JSON.stringify(defaultPrefs), (err: NodeJS.ErrnoException | null) => {
                 if (err) {
                     console.error('Error writing prefs.json:', err);
                 }
@@ -89,8 +106,8 @@ Electron.ipcMain.on('requestPrefsJson', (event) => {
 Electron.ipcMain.on('requestDataJson', (event) => {
     try {
         const dataPath = path.join(Electron.app.getPath('userData'), 'data.json');
-        const jsondData = fs.readFileSync(dataPath, 'utf8');
-        event.returnValue = jsondData;
+        const jsonData = fs.readFileSync(dataPath, 'utf8');
+        event.returnValue = jsonData;
     } catch (e) {
         throw e
     }
@@ -99,14 +116,35 @@ Electron.ipcMain.on('requestDataJson', (event) => {
 Electron.ipcMain.on('wipeOvs', (event) => {
     try {
         const prefsPath = path.join(Electron.app.getPath('userData'), 'prefs.json');
-        fs.writeFileSync(prefsPath, '{"theme":"dark","lang":"english","appname":"OVS 3","startup":false,"encrypt":false}', 'utf-8')
+        fs.writeFileSync(prefsPath, JSON.stringify(defaultPrefs), 'utf-8')
         const dataPath = path.join(Electron.app.getPath('userData'), 'data.json');
         fs.writeFileSync(dataPath, '{}', 'utf-8')
         event.returnValue = 0
     } catch (e) {
-        throw e
+        console.error('Error wiping app:', e);
+        event.returnValue = 1;
     }
 })
+
+Electron.ipcMain.on('changeOvsSettings', (event, args) => {
+    try {
+        const prefsPath = path.join(Electron.app.getPath('userData'), 'prefs.json');
+        const prefs: Preferences = JSON.parse(fs.readFileSync(prefsPath, { encoding: "utf-8" }));
+
+        prefs.lang = args.lang || "english";
+        // prefs.startup = args.startup || false
+        // prefs.encrypt = args.encrypt || false;
+        prefs.appname = args.appname || "OVS 3";
+        prefs.theme = args.theme || 'dark';
+
+        fs.writeFileSync(prefsPath, JSON.stringify(prefs, null, 2), 'utf-8');
+
+        event.returnValue = 0;
+    } catch (e) {
+        console.error('Error changing theme:', e);
+        event.returnValue = 1;
+    }
+});
 
 Electron.app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
