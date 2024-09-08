@@ -17,15 +17,11 @@
     <body>
         <script>
             document.addEventListener("DOMContentLoaded", () => {
-                const jsonData = JSON.parse(window.electron.requestPrefsJson());
-                console.log(JSON.stringify(jsonData));
-            });
-            document.addEventListener("DOMContentLoaded", () => {
                 try {
-                    const jsondData = JSON.parse(
+                    const jsonData = JSON.parse(
                         window.electron.requestDataJson()
                     );
-                    console.log("Datos JSON:", jsondData);
+                    console.log("Datos JSON:", jsonData);
 
                     function displayInventory(inventory) {
                         const inventoryContainer =
@@ -99,14 +95,14 @@
                     }
 
                     if (
-                        !jsondData.inventory ||
-                        !Array.isArray(jsondData.inventory) ||
-                        jsondData.inventory.length === 0
+                        !jsonData.inventory ||
+                        !Array.isArray(jsonData.inventory) ||
+                        jsonData.inventory.length === 0
                     ) {
                         document.getElementById("inventory").innerHTML =
                             "<h1>No items!</h1>";
                     } else {
-                        displayInventory(jsondData.inventory);
+                        displayInventory(jsonData.inventory);
                     }
                 } catch (error) {
                     console.error("Error al procesar los datos JSON:", error);
