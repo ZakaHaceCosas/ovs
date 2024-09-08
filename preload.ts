@@ -1,17 +1,11 @@
-const { contextBridge, ipcRenderer } = require('electron');
+import { Preferences } from "./src/types/types";
 
-interface OvsSettingsArgs {
-    lang?: string;
-    appname?: string;
-    theme?: string;
-    startup?: false;
-    encrypt?: false;
-}
+const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('electron', {
     requestPrefsJson: () => ipcRenderer.sendSync('requestPrefsJson'),
     requestDataJson: () => ipcRenderer.sendSync('requestDataJson'),
-    changeOvsSettings: (args: OvsSettingsArgs) => ipcRenderer.sendSync('changeOvsSettings', args),
+    changeOvsSettings: (args: Preferences) => ipcRenderer.sendSync('changeOvsSettings', args),
     wipeOvs: () => ipcRenderer.sendSync('wipeOvs')
 });
 

@@ -1,6 +1,7 @@
 import * as Electron from 'electron';
 import * as path from 'path';
 import * as fs from 'fs';
+import { Preferences } from './src/types/types';
 
 let win: Electron.BrowserWindow | null = null;
 
@@ -27,14 +28,6 @@ function createWindow(): void {
     win.on('closed', () => {
         win = null;
     });
-}
-
-interface Preferences {
-    theme: "dark" | "light",
-    lang: "english" | "spanish",
-    appname: string,
-    startup: false,
-    encrypt: false, // no boolean as we dont support this yet
 }
 
 const defaultPrefs: Preferences = {
