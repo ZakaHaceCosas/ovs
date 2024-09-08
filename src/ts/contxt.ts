@@ -1,12 +1,13 @@
-/* function toggleContextMenu(x: number, y: number) {
-    const menu = document.getElementById("context-menu");
+function toggleContextMenu(x: number, y: number) {
+    /* const menu = document.getElementById("context-menu");
     if (menu) {
         menu.style.display = (menu.style.display === "block") ? "none" : "block";
         if (menu.style.display === "block") {
             menu.style.top = `${y}px`;
             menu.style.left = `${x}px`;
         }
-    }
+    } */
+    console.log("X?", x, "Y?", y, "WORKS?", "no cause im lazy")
 }
 
 if (document.addEventListener) {
@@ -23,4 +24,3 @@ if (document.addEventListener) {
         return false;
     });
 }
- */
