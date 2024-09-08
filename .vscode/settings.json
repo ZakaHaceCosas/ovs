@@ -12,7 +12,6 @@
     "terminal.integrated.smoothScrolling": true,
     "editor.cursorBlinking": "expand",
     "redhat.telemetry.enabled": false,
-    "editor.fontWeight": 450,
     "editor.fontLigatures": true,
     "editor.formatOnSave": true,
     "prettier.tabWidth": 4,
