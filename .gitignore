@@ -66,3 +66,6 @@ electron-builder.yaml
 
 # Allow non-TS JS
 !src/js/*.js
+
+# ignore todo.html (som thingy i made locally)
+todo.html
