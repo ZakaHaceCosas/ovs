@@ -10,6 +10,31 @@
     </head>
 
     <body>
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                window.wipeOVS = () => {
+                    window.electron.wipeOvs();
+                    window.location.replace("index.html");
+                };
+
+                window.updatePrefs = (lang, appname, theme) => {
+                    window.electron.changeOvsSettings({
+                        lang: lang,
+                        appname: appname,
+                        theme: theme,
+                        startup: false,
+                        encrypt: false,
+                    });
+                };
+
+                const data = JSON.parse(window.electron.requestPrefsJson());
+                console.log(data);
+                const appnameinput = document.getElementById("appName");
+                const appthemeinput = document.getElementById("theme");
+                appnameinput.value = data.appname;
+                appthemeinput.value = data.theme;
+            });
+        </script>
         <nav class="navbar navbar-expand-lg">
             <div class="container-fluid">
                 <a class="navbar-brand" id="appname">OVS 3</a>
@@ -115,16 +140,15 @@
                                 placeholder="Enter app name"
                             />
                         </div>
-                        <!--
-                    <div class="mb-3">
-                        <label for="language" class="form-label">Language</label>
-                        <select class="form-select" id="language">
-                            <option value="en">English</option>
-                            <option value="es">Spanish</option>
-                            <option value="fr">French</option>
-                        </select>
-                    </div>
-                    -->
+                        <div class="mb-3">
+                            <label for="language" class="form-label"
+                                >Language</label
+                            >
+                            <select class="form-select" id="language">
+                                <option value="english">English</option>
+                                <option value="spanish">Spanish</option>
+                            </select>
+                        </div>
                         <div class="mb-3">
                             <label for="theme" class="form-label">Theme</label>
                             <select class="form-select" id="theme">
@@ -132,42 +156,19 @@
                                 <option value="dark">Dark</option>
                             </select>
                         </div>
-                        <button type="submit" class="btn btn-primary">
+                        <button
+                            type="button"
+                            class="btn btn-primary"
+                            onclick="window.updatePrefs(
+                                document.getElementById('language').value,
+                                document.getElementById('appName').value,
+                                document.getElementById('theme').value
+                            )"
+                        >
                             Save changes
                         </button>
                     </form>
                 </div>
-
-                <!--Storage-->
-                <!--
-            <div class="tab-pane fade" id="storage" role="tabpanel" aria-labelledby="storage-tab">
-                <form class="mt-4">
-                    <div class="mb-3">
-                        <label for="storageLocation" class="form-label">Location to store data</label>
-                        <select class="form-select" id="storageLocation">
-                            <option value="userData">AppData DIR</option>
-                            <option value="user">User DIR</option>
-                            <option value="c">C:\ DIR</option>
-                            <option value="downloads">Downloads DIR</option>
-                        </select>
-                    </div>
-                    <div class="form-check form-switch mb-3">
-                        <input class="form-check-input" type="checkbox" id="useStorageLimits">
-                        <label class="form-check-label" for="useStorageLimits">Use storage limits</label>
-                    </div>
-                    <div class="mb-3">
-                        <label for="maxMbSize" class="form-label">Max MB size limit</label>
-                        <input type="number" class="form-control" id="maxMbSize" placeholder="Enter max MB size limit">
-                    </div>
-                    <div class="mb-3">
-                        <label for="maxSetsAmount" class="form-label">Max SETs amount</label>
-                        <input type="number" class="form-control" id="maxSetsAmount"
-                            placeholder="Enter max SETs amount">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Save changes</button>
-                </form>
-            </div>
-            -->
 
                 <!--Security-->
                 <div
@@ -254,10 +255,10 @@
                     <div class="modal-body">
                         Are you sure you want to refresh OVS? This action cannot
                         be undone.
-                        <b
-                            >This means ALL your data (SETs, items, and stock)
+                        <b>
+                            This means ALL your data (SETs, items, and stock)
                             will be deleted, and all your settings will be
-                            reseted</b
+                            reset. </b
                         >.
                     </div>
                     <div class="modal-footer">
@@ -268,17 +269,6 @@
                         >
                             Cancel
                         </button>
-                        <script>
-                            document.addEventListener(
-                                "DOMContentLoaded",
-                                () => {
-                                    window.wipeOVS = () => {
-                                        window.electron.wipeOvs();
-                                        window.location.replace("index.html");
-                                    };
-                                }
-                            );
-                        </script>
                         <button
                             type="button"
                             class="btn btn-danger"
@@ -291,6 +281,6 @@
             </div>
         </div>
         <script src="js/bs.min.js"></script>
-        <script src="js/popper.js"></script>
+        <script src="js/popper.min.js"></script>
     </body>
 </html>
