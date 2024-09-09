@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
         "target": "ES6",
-        "module": "CommonJS",
+        "module": "ES6",
         "lib": ["ES6", "DOM"],
         "strict": true,
         "noUnusedLocals": true,
@@ -18,7 +18,8 @@
         "strictFunctionTypes": true,
         "strictNullChecks": true,
         "strictPropertyInitialization": true,
-        "esModuleInterop": true,
+        "esModuleInterop": false,
         "moduleResolution": "node"
-    }
+    },
+    "include": ["src/**/*.ts", "src/**/*.d.ts"]
 }

@@ -21,7 +21,6 @@
                     const jsonData = JSON.parse(
                         window.electron.requestDataJson()
                     );
-                    console.log("Datos JSON:", jsonData);
 
                     function displayInventory(inventory) {
                         const inventoryContainer =
@@ -168,8 +167,9 @@
                                 class="nav-link active"
                                 aria-current="page"
                                 href="index.html"
-                                >Home</a
                             >
+                                Home
+                            </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="prefs.html">Settings</a>
@@ -230,8 +230,6 @@
                 <div style="width: 20px"></div>
                 <div class="flex-grow-1 list-group" id="inventory"></div>
             </div>
-            <script src="js/bs.min.js"></script>
-            <script src="js/popper.min.js"></script>
         </div>
 
         <!-- modal -->
@@ -271,5 +269,10 @@
                 </div>
             </div>
         </div>
+
+        <!-- JS -->
+        <script type="module" src="ts/theme.js"></script>
+        <script src="js/bs.min.js"></script>
+        <script src="js/popper.min.js"></script>
     </body>
 </html>
