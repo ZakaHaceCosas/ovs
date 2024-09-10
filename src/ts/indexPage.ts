@@ -78,16 +78,13 @@ function displayInventory(inventory: Inventory): void {
 
 document.addEventListener("DOMContentLoaded", () => {
     try {
-        const jsonData: Inventory = JSON.parse(window.electron.requestPrefsJson());
-        console.log(JSON.stringify(jsonData));
+        const jsonData: Inventory = JSON.parse((window as any).electron.requestDataJson());
+        console.log("Datos JSON:", jsonData);
 
-        const jsondData: Inventory = JSON.parse(window.electron.requestDataJson());
-        console.log("Datos JSON:", jsondData);
-
-        if (!jsondData || !Array.isArray(jsondData) || jsondData.length === 0) {
+        if (!jsonData || !Array.isArray(jsonData) || jsonData.length === 0) {
             document.getElementById("inventory")!.innerHTML = "<h1>No items!</h1>";
         } else {
-            displayInventory(jsondData);
+            displayInventory(jsonData);
         }
     } catch (error) {
         console.error("Error al procesar los datos JSON:", error);
