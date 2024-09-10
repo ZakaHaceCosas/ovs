@@ -186,48 +186,50 @@
                 </div>
             </div>
         </nav>
+
         <div class="container mt-5 mb-4">
-            <h1>Home</h1>
-            <p>Welcome, dear user!</p>
             <div id="alerts"></div>
             <div class="d-flex flex-row">
-                <div
-                    class="btn-group dropend"
-                    role="group"
-                    style="height: 40px; width: 150px"
-                >
-                    <button
-                        type="button"
-                        class="btn btn-primary"
-                        data-bs-toggle="dropdown"
+                <div class="d-flex flex-column">
+                    <h1>Home</h1>
+                    <p>Welcome, dear user!</p>
+                    <div
+                        class="btn-group dropend"
+                        role="group"
+                        style="height: 40px; width: 150px"
                     >
-                        Create
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a
-                                class="dropdown-item"
-                                href="#"
-                                data-bs-toggle="modal"
-                                data-bs-target="#createSetModal"
-                            >
-                                Create SET
-                            </a>
-                        </li>
-                        <li>
-                            <a
-                                class="dropdown-item"
-                                href="#"
-                                data-bs-toggle="modal"
-                                data-bs-target="#createItemModal"
-                            >
-                                Create ITEM
-                            </a>
-                        </li>
-                    </ul>
+                        <button
+                            type="button"
+                            class="btn btn-primary"
+                            data-bs-toggle="dropdown"
+                        >
+                            Create
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a
+                                    class="dropdown-item"
+                                    href="#"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#createSetModal"
+                                >
+                                    Create SET
+                                </a>
+                            </li>
+                            <li>
+                                <a
+                                    class="dropdown-item"
+                                    href="#"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#createItemModal"
+                                >
+                                    Create ITEM
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-
-                <div style="width: 20px"></div>
+                <div style="width: 10px"></div>
                 <div class="flex-grow-1 list-group" id="inventory"></div>
             </div>
         </div>
