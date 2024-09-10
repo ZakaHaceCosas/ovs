@@ -15,31 +15,7 @@
     </head>
 
     <body>
-        <script>
-            document.addEventListener("DOMContentLoaded", () => {
-                window.wipeOVS = () => {
-                    window.electron.wipeOvs();
-                    window.location.replace("index.html");
-                };
-
-                window.updatePrefs = (lang, appname, theme) => {
-                    window.electron.changeOvsSettings({
-                        lang: lang,
-                        appname: appname,
-                        theme: theme,
-                        startup: false,
-                        encrypt: false,
-                    });
-                };
-
-                const data = JSON.parse(window.electron.requestPrefsJson());
-                console.log(data);
-                const appnameinput = document.getElementById("appName");
-                const appthemeinput = document.getElementById("theme");
-                appnameinput.value = data.appname;
-                appthemeinput.value = data.theme;
-            });
-        </script>
+        <script type="module" src="ts/prefsHandler.js"></script>
         <nav class="navbar navbar-expand-lg">
             <div class="container-fluid">
                 <a class="navbar-brand" id="appNameHereBro">OVS 3</a>
@@ -212,6 +188,7 @@
                     </form>
                 </div>
             </div>
+            <div style="margin-top: 20px" id="prefsAlertHereBro"></div>
             <footer
                 class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top"
             >
