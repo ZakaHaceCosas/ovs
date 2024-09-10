@@ -255,7 +255,57 @@
                             aria-label="Close"
                         ></button>
                     </div>
-                    <div class="modal-body">...</div>
+                    <div class="modal-body">
+                        <form onsubmit="event.preventDefault();">
+                            <div class="mb-3">
+                                <label
+                                    for="formInput_set_Name"
+                                    class="form-label"
+                                >
+                                    Name of your SET
+                                </label>
+                                <input
+                                    class="form-control"
+                                    type="text"
+                                    id="formInput_set_Name"
+                                    name="setName"
+                                    placeholder="Name of your set here"
+                                    required
+                                    aria-required="true"
+                                    pattern="[A-Za-z0-9 ]+"
+                                    title="Only letters, numbers, and spaces are allowed."
+                                />
+                                <div class="form-text">
+                                    Only letters, numbers, and spaces are
+                                    allowed.
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label
+                                    for="formInput_set_Id"
+                                    class="form-label"
+                                >
+                                    ID of your SET
+                                </label>
+                                <input
+                                    class="form-control"
+                                    type="text"
+                                    id="formInput_set_Id"
+                                    name="setId"
+                                    placeholder="ID of your set here"
+                                    required
+                                    aria-required="true"
+                                    pattern="[A-Za-z0-9]+"
+                                    title="Only letters and numbers are allowed. No spaces or special characters."
+                                />
+                                <div class="form-text">
+                                    Only letters and numbers are allowed. No
+                                    spaces or special characters.
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                     <div class="modal-footer">
                         <button
                             type="button"
@@ -264,7 +314,11 @@
                         >
                             Nevermind
                         </button>
-                        <button type="button" class="btn btn-primary">
+                        <button
+                            type="button"
+                            class="btn btn-primary"
+                            id="onClick_createSet"
+                        >
                             Create
                         </button>
                     </div>
@@ -274,6 +328,7 @@
 
         <!-- JS -->
         <script type="module" src="ts/preferences.js"></script>
+        <script type="module" src="ts/formHandler.js"></script>
         <script src="js/bs.min.js"></script>
         <script src="js/popper.min.js"></script>
     </body>
