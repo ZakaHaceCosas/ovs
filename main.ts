@@ -1,7 +1,7 @@
 import * as Electron from 'electron';
 import * as path from 'path';
 import * as fs from 'fs';
-import { Preferences } from './src/types/types';
+import { Inventory, Preferences } from './src/types/types';
 
 let win: Electron.BrowserWindow | null = null;
 
@@ -38,6 +38,8 @@ const defaultPrefs: Preferences = {
     encrypt: false
 }
 
+const defaultData: Inventory = []
+
 Electron.app.on('ready', () => {
     createWindow();
 
@@ -70,7 +72,7 @@ Electron.app.on('ready', () => {
 
     fs.access(dataPath, fs.constants.F_OK, (err: NodeJS.ErrnoException | null) => {
         if (err) {
-            fs.writeFile(dataPath, '{"inventory": []}', (err: NodeJS.ErrnoException | null) => {
+            fs.writeFile(dataPath, JSON.stringify(defaultData), (err: NodeJS.ErrnoException | null) => {
                 if (err) {
                     console.error('Error writing data.json:', err);
                 }
@@ -102,7 +104,22 @@ Electron.ipcMain.on('requestDataJson', (event) => {
         const jsonData = fs.readFileSync(dataPath, 'utf8');
         event.returnValue = jsonData;
     } catch (e) {
-        throw e
+        console.error('Error reading data:', e);
+        event.returnValue = 'Failed to read data';
+    }
+});
+
+Electron.ipcMain.on('writeDataJson', (event, args) => {
+    try {
+        const dataPath = path.join(Electron.app.getPath('userData'), 'data.json');
+        const newData: Inventory = args;
+
+        fs.writeFileSync(dataPath, JSON.stringify(newData, null, 2), 'utf-8');
+
+        event.returnValue = 0;
+    } catch (e) {
+        console.error('Error writting data:', e);
+        event.returnValue = 1;
     }
 });
 
@@ -111,7 +128,7 @@ Electron.ipcMain.on('wipeOvs', (event) => {
         const prefsPath = path.join(Electron.app.getPath('userData'), 'prefs.json');
         fs.writeFileSync(prefsPath, JSON.stringify(defaultPrefs), 'utf-8')
         const dataPath = path.join(Electron.app.getPath('userData'), 'data.json');
-        fs.writeFileSync(dataPath, '{}', 'utf-8')
+        fs.writeFileSync(dataPath, JSON.stringify(defaultData), 'utf-8')
         event.returnValue = 0
     } catch (e) {
         console.error('Error wiping app:', e);
