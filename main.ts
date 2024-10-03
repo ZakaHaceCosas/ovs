@@ -33,7 +33,7 @@ function createWindow(): void {
 const defaultPrefs: Preferences = {
     theme: "dark",
     lang: "english",
-    appname: "OVS 3",
+    appName: "OVS 3",
     startup: false,
     encrypt: false
 }
@@ -144,7 +144,7 @@ Electron.ipcMain.on('changeOvsSettings', (event, args) => {
         prefs.lang = args.lang || "english";
         // prefs.startup = args.startup || false
         // prefs.encrypt = args.encrypt || false;
-        prefs.appname = args.appname || "OVS 3";
+        prefs.appName = args.appName || "OVS 3";
         prefs.theme = args.theme || 'dark';
 
         fs.writeFileSync(prefsPath, JSON.stringify(prefs, null, 2), 'utf-8');
