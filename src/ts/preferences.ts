@@ -2,12 +2,12 @@ import { Preferences } from '../types/types';
 
 window.addEventListener("DOMContentLoaded", () => {
     try {
-        const prefs: Preferences = JSON.parse((window as any).electron.requestPrefsJson());
+        const preferences: Preferences = JSON.parse((window as any).electron.requestPreferencesJson());
 
-        console.log(prefs);
+        console.log(preferences);
 
-        const appName = prefs.appName
-        const appTheme = prefs.theme || "dark";
+        const appName = preferences.appName
+        const appTheme = preferences.theme || "dark";
 
         const appNameDisplay = document.getElementById('appNameHereBro');
 

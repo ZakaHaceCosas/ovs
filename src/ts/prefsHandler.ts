@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
             alertDiv.role = "alert";
             alertDiv.innerHTML = "<b>Done!</b> Your changes will apply as soon as you leave this menu.";
 
-            const alertContainer = document.getElementById("prefsAlertHereBro");
+            const alertContainer = document.getElementById("preferencesAlertHereBro");
             if (alertContainer) {
                 alertContainer.appendChild(alertDiv);
             } else {
@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.replace("index.html");
     };
 
-    (window as any).updatePrefs = (lang: string, appName: string, theme: "light" | "dark") => {
+    (window as any).updatePreferences = (lang: string, appName: string, theme: "light" | "dark") => {
         (window as any).electron.changeOvsSettings({
             lang: lang,
             appName: appName,
@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
         confirmChanges()
     };
 
-    const data = JSON.parse((window as any).electron.requestPrefsJson()) as Preferences;
+    const data = JSON.parse((window as any).electron.requestPreferencesJson()) as Preferences;
 
     console.log(data);
 

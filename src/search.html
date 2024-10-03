@@ -39,7 +39,9 @@
                             >
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="prefs.html">Settings</a>
+                            <a class="nav-link" href="preferences.html"
+                                >Settings</a
+                            >
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="guide.html">Guide</a>
@@ -199,9 +201,9 @@
                         }
 
                         if (!itemFound && !setFound) {
-                            const notfound = document.createElement("h1");
-                            notfound.innerText = "No results!";
-                            searchResults.appendChild(notfound);
+                            const notFound = document.createElement("h1");
+                            notFound.innerText = "No results!";
+                            searchResults.appendChild(notFound);
                         }
                     }
 

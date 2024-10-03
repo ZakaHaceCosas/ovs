@@ -30,7 +30,7 @@ function createWindow(): void {
     });
 }
 
-const defaultPrefs: Preferences = {
+const defaultPreferences: Preferences = {
     theme: "dark",
     lang: "english",
     appName: "OVS 3",
@@ -49,17 +49,17 @@ Electron.app.on('ready', () => {
         }
     });
 
-    const prefsPath: string = path.join(Electron.app.getPath('userData'), 'prefs.json');
+    const preferencesPath: string = path.join(Electron.app.getPath('userData'), 'preferencesPath.json');
 
-    fs.access(prefsPath, fs.constants.F_OK, (err: NodeJS.ErrnoException | null) => {
+    fs.access(preferencesPath, fs.constants.F_OK, (err: NodeJS.ErrnoException | null) => {
         if (err) {
-            fs.writeFile(prefsPath, JSON.stringify(defaultPrefs), (err: NodeJS.ErrnoException | null) => {
+            fs.writeFile(preferencesPath, JSON.stringify(defaultPreferences), (err: NodeJS.ErrnoException | null) => {
                 if (err) {
-                    console.error('Error writing prefs.json:', err);
+                    console.error('Error writing preferences.json:', err);
                 }
             });
         } else {
-            const prefData: string = fs.readFileSync(prefsPath, 'utf8');
+            const prefData: string = fs.readFileSync(preferencesPath, 'utf8');
             const jsonData: any = JSON.parse(prefData);
 
             if (win && !win.isDestroyed()) {
@@ -79,19 +79,19 @@ Electron.app.on('ready', () => {
             });
         } else {
             const dataData: string = fs.readFileSync(dataPath, 'utf8');
-            const jsondData: any = JSON.parse(dataData);
+            const jsonData: any = JSON.parse(dataData);
 
             if (win && !win.isDestroyed()) {
-                win.webContents.send('data-json', jsondData);
+                win.webContents.send('data-json', jsonData);
             }
         }
     });
 });
 
-Electron.ipcMain.on('requestPrefsJson', (event) => {
+Electron.ipcMain.on('requestPreferencesJson', (event) => {
     try {
-        const prefsPath = path.join(Electron.app.getPath('userData'), 'prefs.json');
-        const jsonData = fs.readFileSync(prefsPath, 'utf8');
+        const preferencesPath = path.join(Electron.app.getPath('userData'), 'preferences.json');
+        const jsonData = fs.readFileSync(preferencesPath, 'utf8');
         event.returnValue = jsonData;
     } catch (e) {
         throw e
@@ -118,15 +118,15 @@ Electron.ipcMain.on('writeDataJson', (event, args) => {
 
         event.returnValue = 0;
     } catch (e) {
-        console.error('Error writting data:', e);
+        console.error('Error writing data:', e);
         event.returnValue = 1;
     }
 });
 
 Electron.ipcMain.on('wipeOvs', (event) => {
     try {
-        const prefsPath = path.join(Electron.app.getPath('userData'), 'prefs.json');
-        fs.writeFileSync(prefsPath, JSON.stringify(defaultPrefs), 'utf-8')
+        const preferencesPath = path.join(Electron.app.getPath('userData'), 'preferences.json');
+        fs.writeFileSync(preferencesPath, JSON.stringify(defaultPreferences), 'utf-8')
         const dataPath = path.join(Electron.app.getPath('userData'), 'data.json');
         fs.writeFileSync(dataPath, JSON.stringify(defaultData), 'utf-8')
         event.returnValue = 0
@@ -138,16 +138,16 @@ Electron.ipcMain.on('wipeOvs', (event) => {
 
 Electron.ipcMain.on('changeOvsSettings', (event, args) => {
     try {
-        const prefsPath = path.join(Electron.app.getPath('userData'), 'prefs.json');
-        const prefs: Preferences = JSON.parse(fs.readFileSync(prefsPath, { encoding: "utf-8" }));
+        const preferencesPath = path.join(Electron.app.getPath('userData'), 'preferences.json');
+        const preferences: Preferences = JSON.parse(fs.readFileSync(preferencesPath, { encoding: "utf-8" }));
 
-        prefs.lang = args.lang || "english";
-        // prefs.startup = args.startup || false
-        // prefs.encrypt = args.encrypt || false;
-        prefs.appName = args.appName || "OVS 3";
-        prefs.theme = args.theme || 'dark';
+        preferences.lang = args.lang || "english";
+        // preferences.startup = args.startup || false
+        // preferences.encrypt = args.encrypt || false;
+        preferences.appName = args.appName || "OVS 3";
+        preferences.theme = args.theme || 'dark';
 
-        fs.writeFileSync(prefsPath, JSON.stringify(prefs, null, 2), 'utf-8');
+        fs.writeFileSync(preferencesPath, JSON.stringify(preferences, null, 2), 'utf-8');
 
         event.returnValue = 0;
     } catch (e) {
