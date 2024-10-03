@@ -1,3 +1,5 @@
+import { Preferences } from "../types/types";
+
 document.addEventListener("DOMContentLoaded", () => {
     function confirmChanges(): void {
         try {
@@ -23,10 +25,10 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.replace("index.html");
     };
 
-    (window as any).updatePrefs = (lang: string, appname: string, theme: "light" | "dark") => {
+    (window as any).updatePrefs = (lang: string, appName: string, theme: "light" | "dark") => {
         (window as any).electron.changeOvsSettings({
             lang: lang,
-            appname: appname,
+            appName: appName,
             theme: theme,
             startup: false,
             encrypt: false,
@@ -34,15 +36,15 @@ document.addEventListener("DOMContentLoaded", () => {
         confirmChanges()
     };
 
-    const data = JSON.parse((window as any).electron.requestPrefsJson());
+    const data = JSON.parse((window as any).electron.requestPrefsJson()) as Preferences;
 
     console.log(data);
 
-    const appnameinput = document.getElementById("appName") as HTMLInputElement;
-    const appthemeinput = document.getElementById("theme") as HTMLInputElement;
+    const appNameInput = document.getElementById("appName") as HTMLInputElement;
+    const appThemeInput = document.getElementById("theme") as HTMLInputElement;
 
-    if (appnameinput && appthemeinput) {
-        appnameinput.value = data.appname;
-        appthemeinput.value = data.theme;
+    if (appNameInput && appThemeInput) {
+        appNameInput.value = data.appName;
+        appThemeInput.value = data.theme;
     }
 });

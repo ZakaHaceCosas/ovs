@@ -6,13 +6,13 @@ window.addEventListener("DOMContentLoaded", () => {
 
         console.log(prefs);
 
-        const appName = prefs.appname
+        const appName = prefs.appName
         const appTheme = prefs.theme || "dark";
 
-        const appNameDisplayer = document.getElementById('appNameHereBro');
+        const appNameDisplay = document.getElementById('appNameHereBro');
 
-        if (appNameDisplayer) {
-            appNameDisplayer.innerHTML = appName
+        if (appNameDisplay) {
+            appNameDisplay.innerHTML = appName
         }
 
         document.documentElement.setAttribute('data-bs-theme', appTheme);

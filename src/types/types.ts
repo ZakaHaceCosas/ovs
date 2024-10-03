@@ -2,9 +2,9 @@
 export interface Preferences {
     theme: "dark" | "light",
     lang: "english" | "spanish",
-    appname: string,
-    startup: false, // no boolean as we dont support this yet
-    encrypt: false, // no boolean as we dont support this yet
+    appName: string,
+    startup: false, // not boolean as we don't support this yet
+    encrypt: false, // not boolean as we don't support this yet
 }
 
 // item interface
