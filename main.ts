@@ -1,9 +1,11 @@
-import * as Electron from 'electron';
-import * as path from 'path';
-import * as fs from 'fs';
-import { Inventory, Preferences } from './src/types/types';
+const Electron = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
+const path = require('path');
+const fs = require('fs');
+import { Preferences, Inventory } from "./src/types/types";
+import { ipcEvent } from "./src/types/glueStickTypes";
 
-let win: Electron.BrowserWindow | null = null;
+let win: (typeof BrowserWindow) | null = null;
 
 function createWindow(): void {
     win = new Electron.BrowserWindow({
@@ -40,16 +42,23 @@ const defaultPreferences: Preferences = {
 
 const defaultData: Inventory = []
 
-Electron.app.on('ready', () => {
+app.on('ready', () => {
     createWindow();
 
-    Electron.app.on('activate', () => {
+    // cleanup
+    Electron.session.defaultSession.clearCache().then(() => {
+        console.log('cleared cache');
+    }).catch((err: any) => {
+        console.error('could not clean cache:', err);
+    });
+
+    app.on('activate', () => {
         if (Electron.BrowserWindow.getAllWindows().length === 0) {
             createWindow();
         }
     });
 
-    const preferencesPath: string = path.join(Electron.app.getPath('userData'), 'preferencesPath.json');
+    const preferencesPath: string = path.join(app.getPath('userData'), 'preferencesPath.json');
 
     fs.access(preferencesPath, fs.constants.F_OK, (err: NodeJS.ErrnoException | null) => {
         if (err) {
@@ -68,7 +77,7 @@ Electron.app.on('ready', () => {
         }
     });
 
-    const dataPath: string = path.join(Electron.app.getPath('userData'), 'data.json');
+    const dataPath: string = path.join(app.getPath('userData'), 'data.json');
 
     fs.access(dataPath, fs.constants.F_OK, (err: NodeJS.ErrnoException | null) => {
         if (err) {
@@ -88,19 +97,19 @@ Electron.app.on('ready', () => {
     });
 });
 
-Electron.ipcMain.on('requestPreferencesJson', (event) => {
+ipcMain.on('requestPreferences', (event: ipcEvent) => {
     try {
-        const preferencesPath = path.join(Electron.app.getPath('userData'), 'preferences.json');
+        const preferencesPath = path.join(app.getPath('userData'), 'preferences.json');
         const jsonData = fs.readFileSync(preferencesPath, 'utf8');
-        event.returnValue = jsonData;
+        event.returnValue = JSON.parse(jsonData) as Preferences;
     } catch (e) {
         throw e
     }
 });
 
-Electron.ipcMain.on('requestDataJson', (event) => {
+ipcMain.on('requestDataJson', (event: ipcEvent) => {
     try {
-        const dataPath = path.join(Electron.app.getPath('userData'), 'data.json');
+        const dataPath = path.join(app.getPath('userData'), 'data.json');
         const jsonData = fs.readFileSync(dataPath, 'utf8');
         event.returnValue = jsonData;
     } catch (e) {
@@ -109,9 +118,9 @@ Electron.ipcMain.on('requestDataJson', (event) => {
     }
 });
 
-Electron.ipcMain.on('writeDataJson', (event, args) => {
+ipcMain.on('writeDataJson', (event: ipcEvent, args: Inventory) => {
     try {
-        const dataPath = path.join(Electron.app.getPath('userData'), 'data.json');
+        const dataPath = path.join(app.getPath('userData'), 'data.json');
         const newData: Inventory = args;
 
         fs.writeFileSync(dataPath, JSON.stringify(newData, null, 2), 'utf-8');
@@ -123,11 +132,11 @@ Electron.ipcMain.on('writeDataJson', (event, args) => {
     }
 });
 
-Electron.ipcMain.on('wipeOvs', (event) => {
+ipcMain.on('wipeOvs', (event: ipcEvent) => {
     try {
-        const preferencesPath = path.join(Electron.app.getPath('userData'), 'preferences.json');
+        const preferencesPath = path.join(app.getPath('userData'), 'preferences.json');
         fs.writeFileSync(preferencesPath, JSON.stringify(defaultPreferences), 'utf-8')
-        const dataPath = path.join(Electron.app.getPath('userData'), 'data.json');
+        const dataPath = path.join(app.getPath('userData'), 'data.json');
         fs.writeFileSync(dataPath, JSON.stringify(defaultData), 'utf-8')
         event.returnValue = 0
     } catch (e) {
@@ -136,9 +145,9 @@ Electron.ipcMain.on('wipeOvs', (event) => {
     }
 })
 
-Electron.ipcMain.on('changeOvsSettings', (event, args) => {
+ipcMain.on('changeOvsSettings', (event: ipcEvent, args: Preferences) => {
     try {
-        const preferencesPath = path.join(Electron.app.getPath('userData'), 'preferences.json');
+        const preferencesPath = path.join(app.getPath('userData'), 'preferences.json');
         const preferences: Preferences = JSON.parse(fs.readFileSync(preferencesPath, { encoding: "utf-8" }));
 
         preferences.lang = args.lang || "english";
@@ -156,8 +165,8 @@ Electron.ipcMain.on('changeOvsSettings', (event, args) => {
     }
 });
 
-Electron.app.on('window-all-closed', () => {
+app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
-        Electron.app.quit();
+        app.quit();
     }
 });

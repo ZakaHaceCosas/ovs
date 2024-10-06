@@ -3,7 +3,7 @@ import { Inventory, Preferences } from "./src/types/types";
 const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('electron', {
-    requestPreferencesJson: () => ipcRenderer.sendSync('requestPreferencesJson'),
+    requestPreferences: () => ipcRenderer.sendSync('requestPreferences'),
     requestDataJson: () => ipcRenderer.sendSync('requestDataJson'),
     changeOvsSettings: (args: Preferences) => ipcRenderer.sendSync('changeOvsSettings', args),
     wipeOvs: () => ipcRenderer.sendSync('wipeOvs'),
