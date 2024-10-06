@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
         confirmChanges()
     };
 
-    const data = JSON.parse((window as any).electron.requestPreferencesJson()) as Preferences;
+    const data: Preferences = window.electron.requestPreferences();
 
     console.log(data);
 

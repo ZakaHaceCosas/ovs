@@ -2,7 +2,7 @@ import { Preferences } from '../types/types';
 
 window.addEventListener("DOMContentLoaded", () => {
     try {
-        const preferences: Preferences = JSON.parse((window as any).electron.requestPreferencesJson());
+        const preferences: Preferences = window.electron.requestPreferences();
 
         console.log(preferences);
 
